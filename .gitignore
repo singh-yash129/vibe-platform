@@ -82,7 +82,6 @@ e2e/*.txt
 .github/agents/debugger.agent.md
 
 frontend/protype/
-pnpm-lock.yaml
 
 # One-off script run-output dumps & local reports (backend root)
 backend/*.json
