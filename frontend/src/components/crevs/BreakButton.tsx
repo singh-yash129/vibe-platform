@@ -12,6 +12,7 @@
  * Proctoring note shown to the student during the break so they understand the
  * suspension is intentional and they are NOT being monitored.
  */
+import React from 'react';
 import type { HlsPlayerHandle } from '@/components/HlsVideoPlayer';
 import { useBreakState } from '@/hooks/useBreakState';
 
