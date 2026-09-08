@@ -1797,3 +1797,13 @@ export class GenAIService extends BaseService {
     });
   }
 }
+
+// ──────────────────────────────────────────────────────────────────────────────
+// CREVS integration note:
+// generateRemediationNote is implemented directly in CrevsService to keep the
+// MiniMax call co-located with its validation and retry logic. GenAIService does
+// not need to proxy it — CrevsService is injected independently in the CREVS
+// controller and can call screeningConfig.minimax directly. The boundary is:
+//   GenAIService → handles video pipeline AI (transcription, segmentation, Q-gen)
+//   CrevsService → handles remediation AI (decoy note generation)
+// ──────────────────────────────────────────────────────────────────────────────

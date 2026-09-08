@@ -1,6 +1,8 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { EmotionType, EmotionSubmission, EmotionResponse, CourseEmotionReport } from "@/types/emotion.types";
 import { apiClient } from "@/lib/api-client";
+import { useCrevsStore } from "@/store/player-store";
+
 
 interface SubmitEmotionPayload {
   courseId: string;
@@ -36,13 +38,24 @@ async function submitEmotion(payload: SubmitEmotionPayload): Promise<EmotionResp
 }
 
 export function useSubmitEmotion() {
+  const proctoringActive = useCrevsStore(s => s.proctoringActive);
+
   return useMutation({
-    mutationFn: submitEmotion,
+    mutationFn: async (payload: SubmitEmotionPayload) => {
+      // ⛔ CREVS proctoring gate: suppress all emotion submissions during a break.
+      // The student clicked "May I Drink Water?" — they must not be penalised
+      // for stepping away from the camera.
+      if (!proctoringActive) {
+        return { success: true, data: undefined } as unknown as EmotionResponse;
+      }
+      return submitEmotion(payload);
+    },
     onError: (error) => {
       console.error("Error submitting emotion:", error);
     },
   });
 }
+
 
 /**
  * Get emotion statistics for a specific item

@@ -120,6 +120,14 @@ interface IQuestionDetails {
    * otherwise recoverable. Used to score the ungraded response at capture.
    */
   peerCorrectLotItemId?: ObjectId;
+  /**
+   * CREVS — Telemetry timestamp (seconds) where this question's concept is
+   * taught in the video transcript. Set by CrevsService.mapQuestionToTimestamp
+   * after AI question generation. Used by the Smart Rewind feature to seek the
+   * video player to (transcriptTimestamp - 15s) on quiz failure.
+   * Undefined for questions generated before CREVS was deployed.
+   */
+  transcriptTimestamp?: number;
 }
 
 interface IQuestionAnswerFeedback {
