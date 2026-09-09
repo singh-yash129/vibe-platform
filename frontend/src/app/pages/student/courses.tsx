@@ -146,7 +146,7 @@ export default function StudentCourses() {
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-4">
+    <div className="flex flex-1 flex-col gap-4 page-enter">
       <div className="flex flex-col space-y-6">
         <PageHeader
           title="My Courses"
@@ -157,44 +157,73 @@ export default function StudentCourses() {
               size="sm"
               onClick={() => activeTab === "available" ? refetchPublic() : refetch()}
               disabled={activeTab === "available" ? isRefetchingPublic : isRefetching}
+              className="gap-1.5 rounded-xl border-border/60 hover:border-violet-500/30 hover:text-violet-400 transition-all duration-200"
             >
-              <RefreshCw className={`h-4 w-4 mr-2 ${(activeTab === "available" ? isRefetchingPublic : isRefetching) ? "animate-spin" : ""}`} />
-              {(activeTab === "available" ? isRefetchingPublic : isRefetching) ? "Refreshing..." : "Refresh"}
+              <RefreshCw className={`h-4 w-4 ${(activeTab === "available" ? isRefetchingPublic : isRefetching) ? "animate-spin" : ""}`} />
+              {(activeTab === "available" ? isRefetchingPublic : isRefetching) ? "Refreshing…" : "Refresh"}
             </Button>
           }
         />
          
         <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-4">
-          <div className="flex md:flex-row flex-col items-center justify-between gap-2">
-            <div className="relative flex-1 md:max-w-md w-full">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search courses..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 h-11 bg-background border-border dark:bg-white/[0.05] dark:border-white/15 dark:hover:border-white/25 dark:placeholder:text-white/40 focus:border-primary focus:ring-primary/20 transition-all duration-300"
-                />
+          <div className="flex md:flex-row flex-col items-center justify-between gap-3">
+            {/* ── Premium search bar ── */}
+            <div className="relative flex-1 md:max-w-sm w-full">
+              <div className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2">
+                {isSearching ? (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="animate-spin"
+                    stroke="hsl(262 83% 70%)" strokeWidth="2" strokeLinecap="round">
+                    <path d="M12 3v3M12 18v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M3 12h3M18 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12" />
+                  </svg>
+                ) : (
+                  <Search className="h-4 w-4 text-muted-foreground" />
+                )}
               </div>
-              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground">
-                <X className="h-4 w-4 cursor-pointer" onClick={() => setSearchQuery('')} />
-              </div>
+              <Input
+                placeholder="Search courses…"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 pr-9 h-10 rounded-xl bg-surface-2 border-border/60
+                  focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/15
+                  hover:border-border transition-all duration-200
+                  placeholder:text-muted-foreground/50"
+              />
+              {searchQuery && (
+                <button
+                  className="absolute right-3 top-1/2 -translate-y-1/2 flex h-5 w-5 items-center justify-center rounded-full bg-muted hover:bg-muted-foreground/20 text-muted-foreground transition-colors"
+                  onClick={() => setSearchQuery('')}
+                  aria-label="Clear search"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              )}
             </div>
-            <div className="flex items-center gap-3">
-              <TabsList className="md:w-fit w-full">
-                <TabsTrigger value="enrolled" className="cursor-pointer">
-                  Enrolled ({isLoading ? "..." : totalDocuments})
-                </TabsTrigger>
-                <TabsTrigger value="available" className="cursor-pointer">
-                  Available ({loadingPublic ? "..." : (publicCoursesData?.totalDocuments || 0)})
-                </TabsTrigger>
-                <TabsTrigger value="completed" className="cursor-pointer">
-                  Completed ({isLoading ? "..." : completedEnrollments.length})
-                </TabsTrigger>
+
+            <div className="flex items-center gap-3 w-full md:w-auto">
+              {/* Tabs */}
+              <TabsList className="md:w-fit w-full rounded-xl border border-border/60 bg-surface-2 p-1 h-auto gap-0.5">
+                {[
+                  { value: "enrolled", label: "Enrolled", count: isLoading ? null : totalDocuments },
+                  { value: "available", label: "Available", count: loadingPublic ? null : (publicCoursesData?.totalDocuments || 0) },
+                  { value: "completed", label: "Completed", count: isLoading ? null : completedEnrollments.length },
+                ].map(({ value: tabVal, label, count }) => (
+                  <TabsTrigger
+                    key={tabVal}
+                    value={tabVal}
+                    className={cn(
+                      "cursor-pointer rounded-lg px-3 py-1.5 text-xs font-semibold transition-all duration-200",
+                      activeTab === tabVal
+                        ? "bg-gradient-to-r from-violet-600/20 to-indigo-600/10 text-violet-400 border border-violet-500/20"
+                        : "text-muted-foreground hover:text-foreground hover:bg-white/5"
+                    )}
+                  >
+                    {label}{count !== null && ` (${count})`}
+                  </TabsTrigger>
+                ))}
               </TabsList>
 
-              {/* View Switcher Toggle */}
-              <div className="hidden sm:flex items-center bg-slate-100 dark:bg-slate-800/50 p-1 rounded-xl border border-slate-200/50 dark:border-slate-700/50">
+              {/* View switcher */}
+              <div className="hidden sm:flex items-center rounded-xl border border-border/60 bg-surface-2 p-1 gap-0.5">
                 <UTS_TooltipProvider>
                   <UTS_Tooltip>
                     <UTS_TooltipTrigger asChild>
