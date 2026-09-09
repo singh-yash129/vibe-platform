@@ -32,190 +32,250 @@ export const NotFoundComponent: FC = () => {
         return prev - 1
       })
     }, 1000)
-
     return () => clearInterval(timer)
   }, [])
 
   const progressPercentage = ((5 - countdown) / 5) * 100
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-background/95 bg-gray-50/50 dark:bg-orange-950/70 flex items-center justify-center p-4">
-      <div className="text-center p-8 bg-white/90 dark:bg-[#1a0a14]/90 backdrop-blur-sm rounded-2xl shadow-xl max-w-md border border-[#ffecb3]/30 dark:border-[#ff9408]/30 transform transition-all duration-300 hover:shadow-2xl">
-        <div className="mx-auto mb-6 w-20 h-20 bg-gradient-to-r from-[#ffecb3] to-[#ff9eb3] dark:from-[#95122c80] dark:to-[#ff940880] rounded-full flex items-center justify-center shadow-inner animate-pulse">
-          <div className="relative">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-10 w-10 text-amber-800 dark:text-amber-100 animate-bounce"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <div className="absolute -top-1 -right-1 w-2 h-2 bg-amber-400 rounded-full animate-ping"></div>
-            <div className="absolute -bottom-1 -left-1 w-1.5 h-1.5 bg-orange-400 rounded-full animate-ping delay-75"></div>
-          </div>
-        </div>
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600&display=swap');
 
-        <div className="mb-4">
-          <h1 className="text-4xl font-bold text-gray-800 dark:text-amber-100 mb-2 animate-fade-in">
-            4<span className="inline-block animate-bounce delay-100">0</span>4
-          </h1>
-          <h2 className="text-xl font-semibold text-gray-700 dark:text-amber-200 animate-fade-in delay-200">
+        .nf-root {
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 24px;
+          position: relative;
+          overflow: hidden;
+          background: hsl(240 8% 5%);
+          font-family: 'Inter', sans-serif;
+        }
+
+        /* Ambient background orbs */
+        .nf-orb-1 {
+          position: absolute;
+          width: 600px; height: 600px;
+          border-radius: 50%;
+          background: radial-gradient(circle, hsl(262 83% 65% / 0.12) 0%, transparent 70%);
+          top: -200px; left: -100px;
+          pointer-events: none;
+          animation: float-slow 8s ease-in-out infinite;
+        }
+        .nf-orb-2 {
+          position: absolute;
+          width: 500px; height: 500px;
+          border-radius: 50%;
+          background: radial-gradient(circle, hsl(38 95% 58% / 0.08) 0%, transparent 70%);
+          bottom: -150px; right: -80px;
+          pointer-events: none;
+          animation: float-slow 10s ease-in-out infinite reverse;
+        }
+
+        @keyframes float-slow {
+          0%, 100% { transform: translateY(0) rotate(0deg); }
+          33%       { transform: translateY(-20px) rotate(2deg); }
+          66%       { transform: translateY(-10px) rotate(-1deg); }
+        }
+
+        /* Glitch 404 */
+        .nf-glitch-wrap {
+          position: relative;
+          display: inline-block;
+          margin-bottom: 8px;
+        }
+        .nf-404 {
+          font-size: clamp(100px, 18vw, 180px);
+          font-weight: 800;
+          font-family: 'Syne', sans-serif;
+          letter-spacing: -0.05em;
+          line-height: 1;
+          background: linear-gradient(135deg, #ffffff 0%, hsl(262 83% 80%) 50%, hsl(38 95% 65%) 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          user-select: none;
+        }
+        .nf-404::before,
+        .nf-404::after {
+          content: '404';
+          position: absolute;
+          top: 0; left: 0;
+          font-size: clamp(100px, 18vw, 180px);
+          font-weight: 800;
+          font-family: 'Syne', sans-serif;
+          letter-spacing: -0.05em;
+          line-height: 1;
+          -webkit-text-fill-color: transparent;
+          -webkit-background-clip: text;
+          background-clip: text;
+        }
+        .nf-404::before {
+          background: linear-gradient(135deg, hsl(262 83% 70%), hsl(262 83% 70% / 0));
+          -webkit-background-clip: text;
+          background-clip: text;
+          animation: glitch-1 3.5s infinite;
+          opacity: 0.7;
+        }
+        .nf-404::after {
+          background: linear-gradient(135deg, hsl(38 95% 58%), hsl(38 95% 58% / 0));
+          -webkit-background-clip: text;
+          background-clip: text;
+          animation: glitch-2 3.5s infinite;
+          opacity: 0.7;
+        }
+        @keyframes glitch-1 {
+          0%, 90%, 100% { clip-path: inset(0 0 100% 0); transform: translate(0); }
+          92% { clip-path: inset(20% 0 50% 0); transform: translate(-4px, 0); }
+          94% { clip-path: inset(60% 0 10% 0); transform: translate(4px, 0); }
+          96% { clip-path: inset(5% 0 75% 0); transform: translate(-2px, 0); }
+        }
+        @keyframes glitch-2 {
+          0%, 88%, 100% { clip-path: inset(0 0 100% 0); transform: translate(0); }
+          89% { clip-path: inset(40% 0 30% 0); transform: translate(4px, 0); }
+          91% { clip-path: inset(70% 0 5% 0); transform: translate(-4px, 0); }
+          93% { clip-path: inset(15% 0 65% 0); transform: translate(2px, 0); }
+        }
+
+        /* Card */
+        .nf-card {
+          position: relative;
+          z-index: 10;
+          text-align: center;
+          padding: 48px 40px;
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.07);
+          border-radius: 28px;
+          backdrop-filter: blur(40px);
+          -webkit-backdrop-filter: blur(40px);
+          max-width: 460px;
+          width: 100%;
+          box-shadow: 0 32px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.03);
+          animation: scale-in 0.5s cubic-bezier(0.22,1,0.36,1);
+        }
+        @keyframes scale-in {
+          from { opacity: 0; transform: scale(0.92) translateY(16px); }
+          to   { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* Progress bar */
+        .nf-progress-track {
+          height: 3px;
+          background: rgba(255,255,255,0.06);
+          border-radius: 3px;
+          overflow: hidden;
+          margin: 20px 0;
+        }
+        .nf-progress-fill {
+          height: 100%;
+          border-radius: 3px;
+          background: linear-gradient(to right, hsl(38 95% 58%), hsl(262 83% 70%));
+          box-shadow: 0 0 8px hsl(262 83% 70% / 0.5);
+          transition: width 0.95s cubic-bezier(0.22,1,0.36,1);
+        }
+
+        /* Button */
+        .nf-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 12px 28px;
+          background: linear-gradient(135deg, hsl(262 83% 58%), hsl(220 80% 65%));
+          border: none;
+          border-radius: 14px;
+          color: white;
+          font-size: 14px;
+          font-weight: 600;
+          font-family: 'Inter', sans-serif;
+          cursor: pointer;
+          transition: opacity 0.2s, transform 0.2s cubic-bezier(0.22,1,0.36,1), box-shadow 0.2s;
+          box-shadow: 0 8px 24px rgba(99,102,241,0.35);
+        }
+        .nf-btn:hover {
+          opacity: 0.9;
+          transform: translateY(-2px);
+          box-shadow: 0 12px 32px rgba(99,102,241,0.5);
+        }
+        .nf-btn:active { transform: translateY(0); }
+
+        /* Floating particles */
+        .nf-particle {
+          position: absolute;
+          pointer-events: none;
+          animation: float-slow var(--dur, 5s) ease-in-out infinite;
+          animation-delay: var(--delay, 0s);
+          font-size: var(--size, 20px);
+          opacity: 0.08;
+        }
+      `}</style>
+
+      <div className="nf-root">
+        {/* Background orbs */}
+        <div className="nf-orb-1" />
+        <div className="nf-orb-2" />
+
+        {/* Floating particles */}
+        {['⭐', '💫', '✨', '🌟', '⚡', '💥', '🔮', '🌀'].map((p, i) => (
+          <span
+            key={i}
+            className="nf-particle"
+            style={{
+              left: `${10 + i * 12}%`,
+              top: `${15 + (i % 3) * 25}%`,
+              '--dur': `${4 + (i % 3)}s`,
+              '--delay': `${i * 0.5}s`,
+              '--size': `${18 + (i % 3) * 10}px`,
+            } as React.CSSProperties}
+          >
+            {p}
+          </span>
+        ))}
+
+        {/* Card */}
+        <div className="nf-card">
+          {/* 404 glitch text */}
+          <div className="nf-glitch-wrap">
+            <div className="nf-404" aria-label="404">404</div>
+          </div>
+
+          <h1
+            style={{
+              fontSize: 22,
+              fontWeight: 700,
+              color: '#f0f4ff',
+              marginBottom: 8,
+              fontFamily: "'Syne', sans-serif",
+              letterSpacing: '-0.02em',
+            }}
+          >
             Page Not Found
-          </h2>
-        </div>
+          </h1>
 
-        <p className="text-gray-600 dark:text-amber-200/80 mb-6 animate-fade-in delay-300">
-          The page you're looking for doesn't exist or has been moved.
-        </p>
+          <p style={{ fontSize: 14, color: 'rgba(148,163,184,0.75)', lineHeight: 1.6, marginBottom: 4 }}>
+            This page wandered off into the void. You'll be redirected in{" "}
+            <span style={{ color: 'hsl(262 83% 70%)', fontWeight: 700 }}>{countdown}s</span>
+          </p>
 
-        {isAuthenticated && user?.role && (
-          <div className="mb-6 p-4 bg-gradient-to-r from-[#ffecb3]/30 to-[#ff9eb3]/30 dark:from-[#95122c40] dark:to-[#ff940840] rounded-lg border border-[#ffecb3]/50 dark:border-[#ff9408]/50 animate-fade-in delay-400">
-            <div className="flex items-center justify-center mb-3">
-              <div className="animate-spin rounded-full h-4 w-4 border-2 border-amber-600 border-t-transparent mr-2"></div>
-              <p className="text-amber-800 dark:text-amber-100 font-medium">
-                Redirecting to your {user.role.toLowerCase()} dashboard...
-              </p>
-            </div>
-
-            <div className="flex items-center justify-center space-x-2 mb-3">
-              <span className="text-2xl font-bold text-amber-700 dark:text-amber-200 tabular-nums">{countdown}</span>
-              <span className="text-amber-600 dark:text-amber-300 text-sm">
-                second{countdown !== 1 ? "s" : ""} remaining
-              </span>
-            </div>
-
-            <div className="w-full bg-amber-200/50 dark:bg-amber-900/50 rounded-full h-2 overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-amber-400 to-orange-500 dark:from-amber-500 dark:to-orange-600 rounded-full transition-all duration-1000 ease-linear"
-                style={{ width: `${progressPercentage}%` }}
-              ></div>
-            </div>
+          {/* Auto-redirect progress */}
+          <div className="nf-progress-track">
+            <div className="nf-progress-fill" style={{ width: `${progressPercentage}%` }} />
           </div>
-        )}
 
-        <button
-          onClick={handleRedirect}
-          disabled={isRedirecting}
-          className={`
-            border bg-gradient-to-r from-[#ffecb3] to-[#ff9eb3] 
-            dark:bg-gradient-to-r dark:to-[#ff940880] dark:from-[#95122c80] 
-            dark:text-white text-black shadow-lg rounded-2xl 
-            flex items-center justify-center p-4 gap-2 w-full h-[60px] 
-            transform transition-all duration-300 
-            ${
-              isRedirecting
-                ? "scale-95 opacity-75 cursor-not-allowed"
-                : "hover:scale-105 hover:shadow-xl active:scale-95"
-            }
-            animate-fade-in delay-500
-          `}
-        >
-          {isRedirecting ? (
-            <>
-              <div className="animate-spin rounded-full h-5 w-5 border-2 border-current border-t-transparent"></div>
-              Redirecting...
-            </>
-          ) : (
-            <>
-              {isAuthenticated && user?.role
-                ? `Go to ${user.role.charAt(0).toUpperCase() + user.role.slice(1)} Dashboard`
-                : "Return to Login"}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 transition-transform group-hover:translate-x-1"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </>
-          )}
-        </button>
-
-        {/* Additional Actions */}
-        <div className="mt-6 space-y-3 animate-fade-in delay-700">
-          <div className="flex justify-center space-x-4">
-            <button
-              onClick={() => window.history.back()}
-              className="text-amber-700 dark:text-amber-300 hover:text-amber-800 dark:hover:text-amber-200 transition-colors duration-200 text-sm font-medium flex items-center space-x-1"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-              </svg>
-              <span>Go Back</span>
-            </button>
-
-            <button
-              onClick={() => (window.location.href = "/")}
-              className="text-amber-700 dark:text-amber-300 hover:text-amber-800 dark:hover:text-amber-200 transition-colors duration-200 text-sm font-medium flex items-center space-x-1"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                />
-              </svg>
-              <span>Home</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Enhanced Footer */}
-        <div className="mt-6 pt-4 border-t border-[#ffecb3]/20 dark:border-[#ff9408]/20 animate-fade-in delay-1000">
-          <div className="flex items-center justify-center space-x-4 text-sm text-amber-700 dark:text-amber-300/70">
-            <span className="flex items-center space-x-1">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              <span>Error code: 404</span>
-            </span>
-            <span className="text-amber-600 dark:text-amber-400">•</span>
-            <span>Page not found</span>
-          </div>
+          <button
+            className="nf-btn"
+            onClick={handleRedirect}
+            disabled={isRedirecting}
+            style={{ opacity: isRedirecting ? 0.6 : 1 }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>
+            </svg>
+            {isRedirecting ? "Redirecting…" : "Take me home"}
+          </button>
         </div>
       </div>
-
-      {/* Background decoration */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-gradient-to-r from-[#ffecb3]/10 to-[#ff9eb3]/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-24 h-24 bg-gradient-to-r from-[#ff9eb3]/10 to-[#ffecb3]/10 rounded-full blur-3xl animate-pulse delay-2000"></div>
-      </div>
-    </div>
+    </>
   )
 }
