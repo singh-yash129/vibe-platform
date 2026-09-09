@@ -25,17 +25,11 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 /**
- * Cards / List view switcher. Extracted so the three course tabs share one
- * implementation. Behaviour (and the persisted `viewMode`) is unchanged — this
- * only renders the toggle and calls back into the parent's `setViewMode`.
+ * Premium view switcher with violet gradient active state.
  */
 function ViewSwitcher({ viewMode, setViewMode }: { viewMode: 'grid' | 'list'; setViewMode: (mode: 'grid' | 'list') => void }) {
-  const baseBtn = "h-8 gap-1.5 rounded-lg px-2.5 text-xs font-semibold transition-all duration-300";
-  const active = "bg-white text-foreground shadow-sm dark:bg-white/10 dark:text-white";
-  const inactive = "text-muted-foreground hover:text-foreground";
-
   return (
-    <div className="flex items-center gap-1 rounded-xl border border-neutral-200/70 bg-neutral-100/80 p-1 dark:border-white/[0.07] dark:bg-white/[0.04]">
+    <div className="flex items-center gap-1 rounded-xl border border-border/60 bg-surface-2 p-1">
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -45,7 +39,12 @@ function ViewSwitcher({ viewMode, setViewMode }: { viewMode: 'grid' | 'list'; se
               aria-label="Card view"
               aria-pressed={viewMode === 'grid'}
               onClick={() => setViewMode('grid')}
-              className={cn(baseBtn, viewMode === 'grid' ? active : inactive)}
+              className={cn(
+                "h-8 gap-1.5 rounded-lg px-2.5 text-xs font-semibold transition-all duration-300",
+                viewMode === 'grid'
+                  ? "bg-gradient-to-r from-violet-600/20 to-indigo-600/10 text-violet-400 border border-violet-500/20"
+                  : "text-muted-foreground hover:text-foreground hover:bg-white/5"
+              )}
             >
               <LayoutGrid className="h-4 w-4" />
               <span className="hidden sm:inline">Cards</span>
@@ -61,7 +60,12 @@ function ViewSwitcher({ viewMode, setViewMode }: { viewMode: 'grid' | 'list'; se
               aria-label="List view"
               aria-pressed={viewMode === 'list'}
               onClick={() => setViewMode('list')}
-              className={cn(baseBtn, viewMode === 'list' ? active : inactive)}
+              className={cn(
+                "h-8 gap-1.5 rounded-lg px-2.5 text-xs font-semibold transition-all duration-300",
+                viewMode === 'list'
+                  ? "bg-gradient-to-r from-violet-600/20 to-indigo-600/10 text-violet-400 border border-violet-500/20"
+                  : "text-muted-foreground hover:text-foreground hover:bg-white/5"
+              )}
             >
               <List className="h-4 w-4" />
               <span className="hidden sm:inline">List</span>
@@ -90,12 +94,16 @@ export default function Page() {
 
   if (!isAuthReady) {
     return (
-      <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
-        <div className="px-4 sm:px-6 lg:px-8 w-full max-w-md">
-          <EmptyState
-            title="Loading..."
-            description="Preparing your dashboard..."
-          />
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-4">
+          <div style={{ position: 'relative', width: 56, height: 56 }}>
+            <svg width="56" height="56" viewBox="0 0 56 56" fill="none" style={{ position: 'absolute', inset: 0, animation: 'vibe-spin-cw 1.2s linear infinite' }}>
+              <defs><linearGradient id="dash-lo-a" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="hsl(38 95% 60%)" /><stop offset="100%" stopColor="hsl(38 95% 60% / 0)" /></linearGradient></defs>
+              <circle cx="28" cy="28" r="24" stroke="url(#dash-lo-a)" strokeWidth="3" strokeLinecap="round" strokeDasharray="120 30" />
+            </svg>
+          </div>
+          <p className="text-sm text-muted-foreground">Loading your dashboard…</p>
+          <style>{`@keyframes vibe-spin-cw { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
         </div>
       </div>
     );
@@ -103,7 +111,7 @@ export default function Page() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="px-4 sm:px-6 lg:px-8 w-full max-w-md">
           <EmptyState
             title="Authentication Required"
@@ -228,14 +236,53 @@ function DashboardContent() {
       <div className="w-full">
         <div className="flex flex-col gap-6 lg:flex-row">
           <main className="w-full min-w-0 flex-1 space-y-6">
-            {/* Greeting */}
-            <section>
-              <h1 className="text-xl font-bold tracking-tight text-foreground">
-                {greeting}, {studentName} 👋
-              </h1>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Welcome back — here's your progress at a glance.
-              </p>
+            {/* ── Hero greeting banner ── */}
+            <section
+              className="relative overflow-hidden rounded-3xl p-6 sm:p-8 animate-slide-up-fade"
+              style={{
+                background: 'linear-gradient(135deg, hsl(262 60% 12% / 0.8) 0%, hsl(240 8% 8%) 60%, hsl(38 50% 10% / 0.5) 100%)',
+                border: '1px solid rgba(255,255,255,0.06)',
+              }}
+            >
+              {/* Animated ambient blobs */}
+              <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+                <div className="absolute -top-8 -left-8 h-40 w-40 rounded-full opacity-20 blur-2xl animate-float-slow" style={{ background: 'hsl(262 83% 65%)' }} />
+                <div className="absolute -bottom-4 right-12 h-32 w-32 rounded-full opacity-15 blur-2xl animate-float" style={{ background: 'hsl(38 95% 58%)' }} />
+              </div>
+
+              <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1">Dashboard</p>
+                  <h1
+                    className="text-2xl sm:text-3xl font-extrabold tracking-tight"
+                    style={{ fontFamily: "'Syne', sans-serif", letterSpacing: '-0.03em' }}
+                  >
+                    <span className="text-foreground">{greeting}, </span>
+                    <span className="gradient-text">{studentName}</span>
+                    <span className="ml-2">👋</span>
+                  </h1>
+                  <p className="mt-1.5 text-sm text-muted-foreground">
+                    Welcome back — here's your progress at a glance.
+                  </p>
+                </div>
+
+                {/* Live stats strip */}
+                <div className="flex flex-wrap gap-2 sm:flex-col sm:items-end sm:gap-2">
+                  {[
+                    { emoji: '📚', label: 'Enrolled', value: enrollments.length },
+                    { emoji: '✅', label: 'Completed', value: enrollments.filter(e => (e as any).percentCompleted === 100).length },
+                  ].map(({ emoji, label, value }) => (
+                    <div
+                      key={label}
+                      className="flex items-center gap-2 rounded-xl border border-white/8 bg-white/5 px-3 py-1.5 backdrop-blur-sm"
+                    >
+                      <span className="text-base">{emoji}</span>
+                      <span className="text-xs font-medium text-muted-foreground">{label}</span>
+                      <span className="text-sm font-bold text-foreground tabular-nums">{value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </section>
 
             {/* Exclusive follow-up course invites unlocked by completing a course */}
